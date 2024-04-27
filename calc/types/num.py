@@ -5,7 +5,7 @@ from .base import BaseExpr, BaseNum
 
 to_num = Fraction
 
-__all__ = ['Num', 'ConstNum', 'PiNum', 'FuncNum', 'SqrtNum', 'FunctionNum', 'StrNum']
+__all__ = ['to_num', 'Num', 'ConstNum', 'PiNum', 'FuncNum', 'SqrtNum', 'FunctionNum', 'StrNum']
 
 
 class Num(BaseNum):
