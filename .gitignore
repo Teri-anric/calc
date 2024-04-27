@@ -1,0 +1,7 @@
+.idea
+.venv
+__pycache__/
+build/
+calc.egg-info/
+calc/__pycache__/__main__.cpython-39.pyc
+calc/types/operations/__pycache__/
