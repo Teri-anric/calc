@@ -8,15 +8,15 @@ from calc.types.num import to_num
 HELP_MESSAGE = """"""
 
 
-def console(data: dict):
+def console(data: dict, _gdata: dict):
     end = "\n" if data.get("end", True) else ""
     if "out" in data:
         print(data["out"], end=end)
     if "ch" in data:
         print(chr(int(data["ch"])), end=end)
     if "in" in data:
-        return to_num(input())
-    return to_num(0)
+        return to_num(input(), _gdata)
+    return to_num(0, _gdata)
 
 
 def interactive_mode(data):

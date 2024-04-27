@@ -1,26 +1,34 @@
 import math
 from fractions import Fraction
+from inspect import getfullargspec
 
 from .base import BaseExpr, BaseNum
 
-to_num = Fraction
 
-__all__ = ['to_num', 'Num', 'ConstNum', 'PiNum', 'FuncNum', 'SqrtNum', 'FunctionNum', 'StrNum']
+__all__ = ['default_to_num', 'Num', 'ConstNum', 'PiNum', 'FuncNum', 'SqrtNum', 'FunctionNum', 'StrNum']
+
+default_to_num = Fraction
+
+def to_num(s_num, data=None):
+    if data:
+        func = data.get('__to_num', default_to_num)
+        return func(s_num)
+    return default_to_num(s_num)
 
 
 class Num(BaseNum):
     def eval(self, data):
-        return to_num(self.string)
+        return to_num(self.string, data)
 
 
 class ConstNum(BaseNum):
     def eval(self, data):
-        return to_num(data[self.string])
+        return to_num(data[self.string], data)
 
 
 class PiNum(BaseNum):
     def eval(self, data):
-        return to_num(math.pi)
+        return to_num(math.pi, data)
 
 
 class FuncNum(BaseNum):
@@ -30,11 +38,16 @@ class FuncNum(BaseNum):
         self.expression = expr
 
     def eval(self, data: dict):
-        local_data = data.copy()
-        self.expression.eval(local_data)
-        return to_num(data[self.name](
-            local_data
-        ))
+        func = data[self.name]
+        spec = getfullargspec(func)
+        if '_gdata' not in spec.args:
+            arg = self.expression.eval(data)
+            result = func(arg)
+        else:
+            local_data = data.copy()
+            _ = self.expression.eval(local_data)
+            result = func(local_data, _gdata=data)
+        return to_num(result, data)
 
     def __str__(self):
         return f'{self.name}({self.expression})'
@@ -43,13 +56,13 @@ class FuncNum(BaseNum):
 class SqrtNum(BaseNum):
     def __init__(self, string: str, k: str, expr: BaseExpr):
         super().__init__(string)
-        self.k = to_num(k or '1')
+        self.k = k or '1'
         self.b = expr
 
     def eval(self, data):
-        return to_num(
-            float(self.b.eval(data) * (self.k ** 2)) ** 0.5
-        )
+        full_part = to_num(self.k, data) ** 2
+        reqult = self.b.eval(data) * full_part
+        return to_num(reqult ** 0.5, data)
 
     def __str__(self):
         k = "" if self.k == 1 else f"{self.k}"
@@ -62,7 +75,7 @@ class FunctionNum(BaseNum):
         self.expr = expr
 
     def eval(self, data):
-        return lambda params: self.expr.eval(params)
+        return lambda params, _gdata: self.expr.eval(params)
 
     def __str__(self):
         return f'$( {self.expr} )'
