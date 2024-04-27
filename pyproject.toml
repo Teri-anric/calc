@@ -20,6 +20,10 @@ dependencies = [
 ]
 dynamic = ["version"]
 
+[tool.setuptools]
+package-dir = { "calc" = "calc" }
+
+
 [tool.setuptools.dynamic]
 version = {attr = "calc.__meta__.VERSION"}
 
