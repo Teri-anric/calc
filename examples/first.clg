@@ -1,0 +1,16 @@
+main = $(
+    console(out= "hohol - 1");
+    tak = console(out= "not hohol - 0"; in=1);
+    #if
+        (tak == 0)
+    #to
+        console(out="hello world");
+    #else
+        console(out="bober kurwa");
+);
+#while 1
+#to (
+    main(0);
+
+    console(out= "")
+)

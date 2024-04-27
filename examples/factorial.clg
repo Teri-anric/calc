@@ -1,0 +1,10 @@
+f = $(
+    #if (n == 1)
+    #to n
+    #else (n * f(n= (n-1)))
+);
+console(
+    out=f(
+        n= console(out="Ведіть число: "; in=1)
+    )
+)
