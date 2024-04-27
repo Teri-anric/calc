@@ -9,13 +9,11 @@ def eval_expression(expression, **kwargs):
     data = {}
     data.update(math.__dict__)
     data.update(kwargs)
-    try:
-        # generate math tree
-        tree = parse_expression(expression)
-        # eval tree
-        result = tree.eval(**data)
-    except Exception as e:
-        raise e
+    # generate math tree
+    tree = parse_expression(expression)
+    print("Tree: ", tree)
+    # eval tree
+    result = tree.eval(data)
 
     # round big numeric
     if len(str(result)) > 20:
@@ -27,4 +25,4 @@ def eval_expression(expression, **kwargs):
 
 if __name__ == '__main__':
     result = eval_expression(input("Please enter an expression: "))
-    print(result)
+    print("Result:", result)
